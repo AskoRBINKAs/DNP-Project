@@ -1,6 +1,14 @@
 #!/bin/bash
 
+RABBITMQ_PASSWORD="$(openssl rand -base64 24)"
 
+touch .env.collector
+
+echo "RABBITMQ_HOST=rabbitmq
+RABBITMQ_PORT=5672
+RABBITMQ_QUEUE=logs" > .env.collector
+echo "RABBITMQ_USER=logger" >> .env.collector
+echo "RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}" >> .env.collector
 echo "[*] Starting RabbitMQ and ManticoreSearch"
 
 docker compose -f docker-compose.central_node.yml up manticore rabbitmq -d
@@ -8,17 +16,15 @@ docker compose -f docker-compose.central_node.yml exec -T manticore mysql -h127.
 sleep 10
 
 echo "[*] Setting up RabbitMQ"
-
-RABBITMQ_PASSWORD="$(openssl rand -base64 24)"
 echo "[*] Generated password for logger: ${RABBITMQ_PASSWORD}"
-
 docker compose -f docker-compose.central_node.yml exec rabbitmq rabbitmqctl add_vhost logs
 docker compose -f docker-compose.central_node.yml exec rabbitmq rabbitmqctl add_user logger "${RABBITMQ_PASSWORD}"
 docker compose -f docker-compose.central_node.yml exec rabbitmq rabbitmqctl set_permissions -p logs logger ".*" ".*" ".*"
 
-echo "RABBITMQ_USER=logger\n" >> .env.collector
-echo "RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}" >> .env.collector
 
-echo "[*] Starting Log Collector"
+
+echo "[*] Building Log Collector"
+
+docker compose -f docker-compose.central_node.yml up --build -d
 
 echo "[+] Enjoy ;)" 

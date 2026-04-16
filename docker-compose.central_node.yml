@@ -13,6 +13,11 @@ services:
     volumes:
       - manticore_data:/var/lib/manticore
       - ./manticore/manticore.conf:/etc/manticoresearch/manticore.conf
+    healthcheck:
+      test: ["CMD-SHELL", "curl localhost:9308"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -34,7 +39,22 @@ services:
         soft: 200000
         hard: 200000
 
+  log_collector:
+    build:
+      context: ./log_collector
+      dockerfile: Dockerfile
+      network: host
+    environment:
+      - PYTHONUNBUFFERED=1
+    env_file:
+      - .env.collector
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      manticore:
+        condition: service_healthy
 
+      
 volumes:
   manticore_data:
   rabbitmq_data:

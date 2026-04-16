@@ -1,5 +1,5 @@
 import asyncio
-from aio_pika import connect, Message
+import aio_pika
 import os
 
 RABBITMQ_HOST = os.getenv("RABBITMQ_HOST","localhost")
@@ -9,7 +9,7 @@ RABBITMQ_PASSWORD = os.getenv("RABBITMQ_PASSWORD","pass")
 RABBITMQ_QUEUE_NAME = os.getenv("RABBITMQ_QUEUE_NAME","logs")
 RABBITMQ_URI = f"amqp://{RABBITMQ_USER}:{RABBITMQ_PASSWORD}@{RABBITMQ_HOST}:{RABBITMQ_PORT}/logs"
 
-async def main(loop):
+async def main():
     connection = await aio_pika.connect_robust(RABBITMQ_URI)
 
     async with connection:
@@ -22,6 +22,6 @@ async def main(loop):
                 async with message.process():
                     print("Received:", message.body.decode())
 
+
 if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main(loop))
+    asyncio.run(main())
