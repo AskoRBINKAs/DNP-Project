@@ -1,0 +1,44 @@
+services:
+  manticore:
+    container_name: manticore
+    image: manticoresearch/manticore:latest
+    restart: unless-stopped
+    ports:
+      - "9306:9306"
+      - "9308:9308"
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 65535
+        hard: 65535
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - manticore_data:/var/lib/manticore
+      - ./manticore/manticore.conf:/etc/manticoresearch/manticore.conf
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "127.0.0.1:15672:15672"
+    env_file:
+      - .env.rabbitmq
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    ulimits:
+      nofile:
+        soft: 200000
+        hard: 200000
+
+
+volumes:
+  manticore_data:
+  rabbitmq_data:
