@@ -3,9 +3,6 @@ services:
     container_name: manticore
     image: manticoresearch/manticore:latest
     restart: unless-stopped
-    ports:
-      - "9306:9306"
-      - "9308:9308"
     ulimits:
       nproc: 65535
       nofile:

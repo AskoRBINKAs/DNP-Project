@@ -1,6 +1,6 @@
 CREATE TABLE logs (
     id bigint,
-    timestamp timestamp,
+    `timestamp` timestamp,
     source string,
     data json
 );
