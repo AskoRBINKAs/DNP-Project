@@ -1,6 +1,5 @@
 services:
   manticore:
-    container_name: manticore
     image: manticoresearch/manticore:latest
     restart: unless-stopped
     ulimits:
