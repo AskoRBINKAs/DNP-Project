@@ -1,0 +1,17 @@
+apiVersion: 1
+
+datasources:
+  - name: Manticore Logs
+    type: mysql
+    access: proxy
+    url: manticore:9306
+    database: Manticore
+    user: ""
+    password: ""
+    jsonData:
+      maxOpenConns: 0
+      maxIdleConns: 2
+      connMaxLifetime: 14400
+      timezone: "UTC"
+    editable: true
+    isDefault: true

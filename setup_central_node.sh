@@ -1,6 +1,7 @@
 #!/bin/bash
 
 RABBITMQ_PASSWORD="$(openssl rand -base64 24)"
+GRAFANA_PASSWORD="$(openssl rand -base64 24)"
 
 touch .env.collector
 
@@ -10,6 +11,11 @@ RABBITMQ_QUEUE=logs" > .env.collector
 echo "RABBITMQ_USER=logger" >> .env.collector
 echo "RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}" >> .env.collector
 echo "[*] Starting RabbitMQ and ManticoreSearch"
+
+touch .env.grafana
+
+echo "GRAFANA_USER=admin
+GRAFANA_PASSWORD=password" > .env.grafana
 
 docker compose -f docker-compose.central_node.yml up manticore rabbitmq -d
 docker compose -f docker-compose.central_node.yml exec -T manticore mysql -h127.0.0.1 -P9306 < manticore/create_tables.sql
