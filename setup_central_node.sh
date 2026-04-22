@@ -1,6 +1,7 @@
 #!/bin/bash
 
 RABBITMQ_PASSWORD="$(openssl rand -base64 24)"
+GRAFANA_PASSWORD="$(openssl rand -base64 24)"
 
 touch .env.collector
 
