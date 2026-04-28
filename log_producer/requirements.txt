@@ -1,0 +1,13 @@
+aio-pika==9.6.2
+aiohappyeyeballs==2.6.1
+aiohttp==3.13.5
+aiormq==6.9.4
+aiosignal==1.4.0
+attrs==26.1.0
+frozenlist==1.8.0
+idna==3.11
+multidict==6.7.1
+pamqp==3.3.0
+propcache==0.4.1
+yarl==1.23.0
+pika
